@@ -5,8 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.clonetelegram.UI.fragments.ChatFragment
+import com.example.clonetelegram.UI.fragments.MainFragment
+import com.example.clonetelegram.UI.fragments.register.EnterPhoneNumberFragment
 import com.example.clonetelegram.UI.objects.AppDrawer
+import com.example.clonetelegram.database.AUTH
+import com.example.clonetelegram.database.initFirebase
+import com.example.clonetelegram.database.initUser
 import com.example.clonetelegram.databinding.ActivityMainBinding
 import com.example.clonetelegram.utils.*
 import kotlinx.coroutines.CoroutineScope
@@ -38,12 +42,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initFunc() {
+        setSupportActionBar(mToolbar)
         if (AUTH.currentUser != null) {
-            setSupportActionBar(mToolbar)
+
             mAppDrawer.create()
-            replaceFragment(ChatFragment(), false)
+            replaceFragment(MainFragment(), false)
         } else {
-            replaceActivity(RegisterActivity())
+           replaceFragment(EnterPhoneNumberFragment(),false)
         }
     }
 

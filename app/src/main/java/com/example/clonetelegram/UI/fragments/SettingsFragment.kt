@@ -8,7 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 
 import com.example.clonetelegram.R
-import com.example.clonetelegram.activity.RegisterActivity
+import com.example.clonetelegram.database.*
 import com.example.clonetelegram.utils.*
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -22,6 +22,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         super.onResume()
         setHasOptionsMenu(true)
         initFields()
+        APP_ACTIVITY.title = "Настройки"
     }
 
     private fun initFields() {
@@ -54,7 +55,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
             R.id.settings_menu_exit -> {
                 AppStates.updateState(AppStates.OFFLINE)
                 AUTH.signOut()
-                APP_ACTIVITY.replaceActivity(RegisterActivity())
+                restartActivity()
             }
             R.id.settings_menu_change_name -> replaceFragment(ChangeNameFragment())
         }
@@ -65,7 +66,9 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             val uri = CropImage.getActivityResult(data).uri
-            val path = REF_STORAGE_ROOT.child(FOLDER_PROFILE_IMAGE)
+            val path = REF_STORAGE_ROOT.child(
+                FOLDER_PROFILE_IMAGE
+            )
                 .child(CURRNET_UID)
 
             putimageToStorage(uri, path) {

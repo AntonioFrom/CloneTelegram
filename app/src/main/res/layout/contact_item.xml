@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/settings_buttons"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/contact_photo"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:src="@drawable/avatardefault_92824"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/contacts_fullname"
+        style="@style/normal_text"
+        android:layout_width="332dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toEndOf="@+id/contact_photo"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Yuri Petrov" />
+
+    <TextView
+        android:id="@+id/contact_status"
+        style="@style/small_text"
+        android:layout_width="353dp"
+        android:layout_height="25dp"
+        app:layout_constraintStart_toEndOf="@+id/contact_photo"
+        app:layout_constraintTop_toBottomOf="@+id/contacts_fullname"
+        tools:text="online" />
 </androidx.constraintlayout.widget.ConstraintLayout>
