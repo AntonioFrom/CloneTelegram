@@ -15,7 +15,7 @@ class EnterCodeFragment(val phoneNumber: String, val id: String) :
     override fun onStart() {
         super.onStart()
 
-        (APP_ACTIVITY).title = phoneNumber
+        APP_ACTIVITY.title = phoneNumber
         register_input_code.addTextChangedListener(AppTextWatcher {
 
             val string = register_input_code.text.toString()

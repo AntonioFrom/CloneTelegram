@@ -4,6 +4,7 @@ package com.example.clonetelegram.UI.fragments
 import androidx.fragment.app.Fragment
 import com.example.clonetelegram.R
 import com.example.clonetelegram.utils.APP_ACTIVITY
+import com.example.clonetelegram.utils.hideKeyboard
 
 
 class MainFragment : Fragment(R.layout.fragment_chat) {
@@ -14,5 +15,6 @@ class MainFragment : Fragment(R.layout.fragment_chat) {
         super.onResume()
         APP_ACTIVITY.title = "Chats"
         APP_ACTIVITY.mAppDrawer.enableDrawer()
+        hideKeyboard()
     }
 }
