@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.message_item.view.*
 
 class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolder>() {
 
-    var mlistMessageCache = emptyList<CommonModel>()
+    var mlistMessageCache = mutableListOf<CommonModel>()
     private lateinit var mDiffResult: DiffUtil.DiffResult
 
     class SingleChatHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,14 +52,28 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
         }
     }
 
-    fun addItem(item: CommonModel) {
-        val newList = mutableListOf<CommonModel>()
-        newList.addAll(mlistMessageCache)
-        if (!newList.contains(item)) newList.add(item)
-        newList.sortBy { it.timeStamp.toString() }
-        mDiffResult = DiffUtil.calculateDiff(DiffUtilCallback(mlistMessageCache, newList))
-        mDiffResult.dispatchUpdatesTo(this)
-        mlistMessageCache = newList
+    fun addItem(item: CommonModel,toBottom:Boolean,onSuccess: () -> Unit ) {
+        if (toBottom){
+            if (!mlistMessageCache.contains(item)){
+                mlistMessageCache.add(item)
+                notifyItemInserted(mlistMessageCache.size)
+            }
+        } else{
+            if (!mlistMessageCache.contains(item)){
+                mlistMessageCache.add(item)
+                mlistMessageCache.sortBy { it.timeStamp.toString() }
+                notifyItemInserted(0)
+            }
+            onSuccess()
+        }
+
+//        val newList = mutableListOf<CommonModel>()
+//        newList.addAll(mlistMessageCache)
+//        if (!newList.contains(item)) newList.add(item)
+//        newList.sortBy { it.timeStamp.toString() }
+//        mDiffResult = DiffUtil.calculateDiff(DiffUtilCallback(mlistMessageCache, newList))
+//        mDiffResult.dispatchUpdatesTo(this)
+//        mlistMessageCache = newList
     }
 }
 
