@@ -52,20 +52,36 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
         }
     }
 
-    fun addItem(item: CommonModel,toBottom:Boolean,onSuccess: () -> Unit ) {
-        if (toBottom){
-            if (!mlistMessageCache.contains(item)){
-                mlistMessageCache.add(item)
-                notifyItemInserted(mlistMessageCache.size)
-            }
-        } else{
-            if (!mlistMessageCache.contains(item)){
-                mlistMessageCache.add(item)
-                mlistMessageCache.sortBy { it.timeStamp.toString() }
-                notifyItemInserted(0)
-            }
-            onSuccess()
+    fun addItemToBottom(item: CommonModel, onSuccess: () -> Unit) {
+        if (!mlistMessageCache.contains(item)) {
+            mlistMessageCache.add(item)
+            notifyItemInserted(mlistMessageCache.size)
         }
+        onSuccess()
+    }
+
+    fun addItemToTop(item: CommonModel, onSuccess: () -> Unit) {
+        if (!mlistMessageCache.contains(item)) {
+            mlistMessageCache.add(item)
+            mlistMessageCache.sortBy { it.timeStamp.toString() }
+            notifyItemInserted(0)
+        }
+        onSuccess()
+    }
+//    fun addItem(item: CommonModel,toBottom:Boolean,onSuccess: () -> Unit ) {
+//        if (toBottom){
+//            if (!mlistMessageCache.contains(item)){
+//                mlistMessageCache.add(item)
+//                notifyItemInserted(mlistMessageCache.size)
+//            }
+//        } else{
+//            if (!mlistMessageCache.contains(item)){
+//                mlistMessageCache.add(item)
+//                mlistMessageCache.sortBy { it.timeStamp.toString() }
+//                notifyItemInserted(0)
+//            }
+//            onSuccess()
+//        }
 
 //        val newList = mutableListOf<CommonModel>()
 //        newList.addAll(mlistMessageCache)
@@ -74,7 +90,7 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
 //        mDiffResult = DiffUtil.calculateDiff(DiffUtilCallback(mlistMessageCache, newList))
 //        mDiffResult.dispatchUpdatesTo(this)
 //        mlistMessageCache = newList
-    }
+    //   }
 }
 
 

@@ -2,6 +2,7 @@ package com.example.clonetelegram.UI.fragments.SingleChat
 
 import android.view.View
 import android.widget.AbsListView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clonetelegram.R
@@ -30,15 +31,22 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var mCountMessages = 10
     private var mIsScroling = false
     private var mSmoothScrollToPosttion = true
-//    private var mListListeners = mutableListOf<AppChildEventListener>()
+
+    //  private var mListListeners = mutableListOf<AppChildEventListener>()
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var mLayoutManager: LinearLayoutManager
 
 
     override fun onResume() {
         super.onResume()
-        mSwipeRefreshLayout = chat_swipe_refresh
+        initFields()
         initToolbar()
         initRecyclerView()
+    }
+
+    private fun initFields() {
+        mSwipeRefreshLayout = chat_swipe_refresh
+        mLayoutManager = LinearLayoutManager(this.context)
     }
 
     private fun initRecyclerView() {
@@ -50,21 +58,35 @@ class SingleChatFragment(private val contact: CommonModel) :
             .child(CURRNET_UID)
             .child(contact.id)
         mRecyclerView.adapter = mAdapter
+        mRecyclerView.layoutManager = mLayoutManager
+        mRecyclerView.setHasFixedSize(true)
+        mRecyclerView.isNestedScrollingEnabled = false
         mMessagesListener = AppChildEventListener {
-            mAdapter.addItem(it.getCommonModel(), mSmoothScrollToPosttion){
-                if (mSmoothScrollToPosttion) {
+            val message = it.getCommonModel()
+            if (mSmoothScrollToPosttion) {
+                mAdapter.addItemToBottom(message) {
                     mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
                 }
+            } else {
+                mAdapter.addItemToTop(message) {
+                    mSwipeRefreshLayout.isRefreshing = false
+                }
             }
-            mSwipeRefreshLayout.isRefreshing = false
+
+//            mAdapter.addItem(it.getCommonModel(), mSmoothScrollToPosttion){
+//                if (mSmoothScrollToPosttion) {
+//                    mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
+//                }
+//                mSwipeRefreshLayout.isRefreshing = false
+//            }
         }
 
         mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
-        //       mListListeners.add(mMessagesListener)
+//      mListListeners.add(mMessagesListener)
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (mIsScroling && dy < 0) {
+                if (mIsScroling && dy < 0 && mLayoutManager.findFirstVisibleItemPosition() <= 3) {
                     updateData()
                 }
             }
