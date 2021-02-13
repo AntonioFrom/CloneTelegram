@@ -3,9 +3,7 @@ package com.example.clonetelegram.database
 import android.net.Uri
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
-import com.example.clonetelegram.utils.APP_ACTIVITY
-import com.example.clonetelegram.utils.AppValueEventListener
-import com.example.clonetelegram.utils.showToast
+import com.example.clonetelegram.utils.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
@@ -26,6 +24,7 @@ const val NODE_MESSAGES = "messages"
 const val NODE_USER_NAMES = "usernames"
 const val NODE_PHONES = "phones"
 const val NODE_PHONES_CONTACTS = "phones_contacts"
+const val FOLDER_MESSAGES_IMAGES = "message_image"
 
 const val FOLDER_PROFILE_IMAGE = "pro file_image"
 const val TYPE_TEXT = "text"
@@ -41,6 +40,7 @@ const val CHILD_FULL_NAME = "fullname"
 const val CHILD_BIO = "bio"
 const val CHILD_PHOTO_URL = "photoURL"
 const val CHILD_STATE = "state"
+const val CHILD_IMAGE_ULR = "imageURL"
 
 fun initFirebase() {
     AUTH = FirebaseAuth.getInstance()
@@ -137,7 +137,7 @@ fun sendMessage(message: String, receivingUserID: String, typeText: String, func
     val mapMessage = hashMapOf<String, Any>()
     mapMessage[CHILD_FROM] =
         CURRNET_UID
-    mapMessage[CHILD_TYPE] = typeText
+    mapMessage[CHILD_TYPE] = TYPE_MESSAGE_TEXT
     mapMessage[CHILD_TEXT] = message
     mapMessage[CHILD_ID] = messageKey.toString()
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
@@ -150,7 +150,25 @@ fun sendMessage(message: String, receivingUserID: String, typeText: String, func
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+fun sendMessageAsImage(receivingUserID: String, imageUrl: String, messageKey: String) {
+    val refDialogUser = "$NODE_MESSAGES/$CURRNET_UID/$receivingUserID"
+    val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserID/$CURRNET_UID"
 
+    val mapMessage = hashMapOf<String, Any>()
+    mapMessage[CHILD_FROM] =
+        CURRNET_UID
+    mapMessage[CHILD_TYPE] = TYPE_MESSAGE_IMAGE
+    mapMessage[CHILD_ID] = messageKey
+    mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
+    mapMessage[CHILD_IMAGE_ULR] = imageUrl
+
+    val mapDialog = hashMapOf<String, Any>()
+    mapDialog["$refDialogUser/$messageKey"] = mapMessage
+    mapDialog["$refDialogReceivingUser/$messageKey"] = mapMessage
+
+    REF_DATABASE_ROOT.updateChildren(mapDialog)
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
 fun updateCurrentUserName(newUserName: String) {
     REF_DATABASE_ROOT.child(
         NODE_USERS

@@ -39,7 +39,19 @@
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="send"
+        android:visibility="gone"
         android:src="@drawable/ic_send_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/chat_input_message" />
+    <ImageView
+        android:id="@+id/chat_btn_attach"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="send"
+        android:background="@color/white"
+        android:src="@drawable/ic_attach"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/chat_input_message" />
