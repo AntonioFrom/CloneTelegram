@@ -65,7 +65,7 @@ inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url:
         .addOnFailureListener { showToast(it.message.toString()) }
 }
 
-inline fun putimageToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
+inline fun putImageToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
     path.putFile(uri)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
@@ -155,8 +155,7 @@ fun sendMessageAsImage(receivingUserID: String, imageUrl: String, messageKey: St
     val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserID/$CURRNET_UID"
 
     val mapMessage = hashMapOf<String, Any>()
-    mapMessage[CHILD_FROM] =
-        CURRNET_UID
+    mapMessage[CHILD_FROM] = CURRNET_UID
     mapMessage[CHILD_TYPE] = TYPE_MESSAGE_IMAGE
     mapMessage[CHILD_ID] = messageKey
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP

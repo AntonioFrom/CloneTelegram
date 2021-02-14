@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         APP_ACTIVITY = this
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     private fun initFunc() {
         setSupportActionBar(mToolbar)
         if (AUTH.currentUser != null) {
-
             mAppDrawer.create()
             replaceFragment(MainFragment(), false)
         } else {

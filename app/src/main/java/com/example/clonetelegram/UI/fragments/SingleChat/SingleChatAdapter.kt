@@ -3,6 +3,7 @@ package com.example.clonetelegram.UI.fragments.SingleChat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
@@ -10,23 +11,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.clonetelegram.R
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.database.CURRNET_UID
-import com.example.clonetelegram.utils.DiffUtilCallback
-import com.example.clonetelegram.utils.asTime
+import com.example.clonetelegram.utils.*
 import kotlinx.android.synthetic.main.message_item.view.*
 
 class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolder>() {
 
     var mlistMessageCache = mutableListOf<CommonModel>()
-    private lateinit var mDiffResult: DiffUtil.DiffResult
 
     class SingleChatHolder(view: View) : RecyclerView.ViewHolder(view) {
+        //text
         val blocUserMessage: ConstraintLayout = view.bloc_user_message
         val chatUserMessage: TextView = view.chat_user_message
         val chatUserMessageTime: TextView = view.chat_user_message_time
-
         val blocReceivedMessage: ConstraintLayout = view.bloc_received_message
         val chatReceivedMessage: TextView = view.chat_received_message
         val chatReceivedMessageTime: TextView = view.chat_received_message_time
+
+        //Image
+        val blocReceivedImageMessage: ConstraintLayout = view.bloc_received_image_message
+        val blocUserImageMessage: ConstraintLayout = view.bloc_user_image_message
+        val chatUserImage: ImageView = view.chat_user_image
+        val chatReceivedImage: ImageView = view.chat_received_image
+        val chatUserImageMessageTime: TextView = view.chat_user_image_message_time
+        val chatReceivedImageMessageTime: TextView = view.chat_received_image_message_time
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SingleChatHolder {
@@ -37,6 +44,34 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
     override fun getItemCount(): Int = mlistMessageCache.size
 
     override fun onBindViewHolder(holder: SingleChatHolder, position: Int) {
+
+        when (mlistMessageCache[position].type) {
+            TYPE_MESSAGE_TEXT -> drawMessageText(holder, position)
+            TYPE_MESSAGE_IMAGE -> drawMessageImage(holder, position)
+        }
+    }
+
+    private fun drawMessageImage(holder: SingleChatHolder, position: Int) {
+        holder.blocUserMessage.visibility = View.GONE
+        holder.blocReceivedMessage.visibility = View.GONE
+        if (mlistMessageCache[position].from == CURRNET_UID) {
+            holder.blocReceivedImageMessage.visibility = View.GONE
+            holder.blocUserImageMessage.visibility = View.VISIBLE
+            holder.chatUserImage.downloadAndSetImage(mlistMessageCache[position].imageUrl)
+            holder.chatUserImageMessageTime.text =
+                mlistMessageCache[position].timeStamp.toString().asTime()
+        } else {
+            holder.blocReceivedImageMessage.visibility = View.VISIBLE
+            holder.blocUserImageMessage.visibility = View.GONE
+            holder.chatReceivedImage.downloadAndSetImage(mlistMessageCache[position].imageUrl)
+            holder.chatReceivedImageMessageTime.text =
+                mlistMessageCache[position].timeStamp.toString().asTime()
+        }
+    }
+
+    private fun drawMessageText(holder: SingleChatHolder, position: Int) {
+        holder.blocReceivedImageMessage.visibility = View.GONE
+        holder.blocUserImageMessage.visibility = View.GONE
         if (mlistMessageCache[position].from == CURRNET_UID) {
             holder.blocUserMessage.visibility = View.VISIBLE
             holder.blocReceivedMessage.visibility = View.GONE

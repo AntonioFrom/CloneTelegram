@@ -15,9 +15,7 @@ import com.example.clonetelegram.models.UserModel
 import com.example.clonetelegram.utils.*
 import com.google.firebase.database.DatabaseReference
 import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
 import kotlinx.android.synthetic.main.toolbar_info.view.*
 
@@ -52,17 +50,17 @@ class SingleChatFragment(private val contact: CommonModel) :
     private fun initFields() {
         mSwipeRefreshLayout = chat_swipe_refresh
         mLayoutManager = LinearLayoutManager(this.context)
-        chat_input_message.addTextChangedListener(AppTextWatcher{
+        chat_input_message.addTextChangedListener(AppTextWatcher {
             val string = chat_input_message.text.toString()
-            if (string.isEmpty()){
+            if (string.isEmpty()) {
                 chat_btn_send_message.visibility = View.GONE
                 chat_btn_attach.visibility = View.VISIBLE
-            }else{
+            } else {
                 chat_btn_send_message.visibility = View.VISIBLE
                 chat_btn_attach.visibility = View.GONE
             }
         })
-        chat_btn_attach.setOnClickListener{attachFile()}
+        chat_btn_attach.setOnClickListener { attachFile() }
     }
 
     private fun attachFile() {
@@ -158,6 +156,7 @@ class SingleChatFragment(private val contact: CommonModel) :
             }
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
@@ -168,9 +167,10 @@ class SingleChatFragment(private val contact: CommonModel) :
                 .child(FOLDER_MESSAGES_IMAGES)
                 .child(messageKey)
 
-            putimageToStorage(uri, path) {
+            putImageToStorage(uri, path) {
                 getUrlFromStorage(path) {
-                    sendMessageAsImage(contact.id,it,messageKey)
+                    sendMessageAsImage(contact.id, it, messageKey)
+                    mSmoothScrollToPosttion = true
                 }
             }
 
