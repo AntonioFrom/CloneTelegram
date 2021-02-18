@@ -26,7 +26,7 @@ const val NODE_PHONES = "phones"
 const val NODE_PHONES_CONTACTS = "phones_contacts"
 const val FOLDER_MESSAGES_IMAGES = "message_image"
 
-const val FOLDER_PROFILE_IMAGE = "pro file_image"
+const val FOLDER_PROFILE_IMAGE = "profile_image"
 const val TYPE_TEXT = "text"
 
 const val CHILD_TEXT = "textMessage"
@@ -51,9 +51,7 @@ fun initFirebase() {
 }
 
 inline fun putUrlToDatabase(url: String, crossinline function: () -> Unit) {
-    REF_DATABASE_ROOT.child(NODE_USERS).child(
-        CURRNET_UID
-    )
+    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRNET_UID)
         .child(CHILD_PHOTO_URL).setValue(url)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
@@ -64,6 +62,11 @@ inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url:
         .addOnSuccessListener { function(it.toString()) }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+//inline fun getUrlFromDatabase(path: DatabaseReference, crossinline function: (url: String) -> Unit) {
+//    path.child().
+//        .addOnSuccessListener { function(it.toString()) }
+//        .addOnFailureListener { showToast(it.message.toString()) }
+//}
 
 inline fun putImageToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
     path.putFile(uri)

@@ -1,5 +1,6 @@
 package com.example.clonetelegram.UI.fragments.SingleChat
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +59,7 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
             holder.blocReceivedImageMessage.visibility = View.GONE
             holder.blocUserImageMessage.visibility = View.VISIBLE
             holder.chatUserImage.downloadAndSetImage(mlistMessageCache[position].imageUrl)
+            Log.e("muTag",mlistMessageCache[position].imageUrl)
             holder.chatUserImageMessageTime.text =
                 mlistMessageCache[position].timeStamp.toString().asTime()
         } else {
@@ -76,6 +78,7 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
             holder.blocUserMessage.visibility = View.VISIBLE
             holder.blocReceivedMessage.visibility = View.GONE
             holder.chatUserMessage.text = mlistMessageCache[position].textMessage
+            Log.e("muTag",mlistMessageCache[position].textMessage)
             holder.chatUserMessageTime.text =
                 mlistMessageCache[position].timeStamp.toString().asTime()
         } else {

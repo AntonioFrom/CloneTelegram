@@ -1,9 +1,12 @@
 package com.example.clonetelegram.UI.fragments.SingleChat
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AbsListView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,6 +21,9 @@ import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
 import kotlinx.android.synthetic.main.toolbar_info.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class SingleChatFragment(private val contact: CommonModel) :
@@ -38,6 +44,11 @@ class SingleChatFragment(private val contact: CommonModel) :
     //  private var mListListeners = mutableListOf<AppChildEventListener>()
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var mLayoutManager: LinearLayoutManager
+//    private var messageKey = REF_DATABASE_ROOT.child(NODE_MESSAGES)
+//        .child(CURRNET_UID).child(contact.id).push().key.toString()
+//    private var path = REF_STORAGE_ROOT
+//        .child(FOLDER_MESSAGES_IMAGES)
+//        .child(messageKey)
 
 
     override fun onResume() {
@@ -45,22 +56,44 @@ class SingleChatFragment(private val contact: CommonModel) :
         initFields()
         initToolbar()
         initRecyclerView()
+//        contact.imageUrl = path.toString()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
         mSwipeRefreshLayout = chat_swipe_refresh
         mLayoutManager = LinearLayoutManager(this.context)
         chat_input_message.addTextChangedListener(AppTextWatcher {
             val string = chat_input_message.text.toString()
-            if (string.isEmpty()) {
+            if (string.isEmpty() || string == "Record") {
                 chat_btn_send_message.visibility = View.GONE
                 chat_btn_attach.visibility = View.VISIBLE
+                chat_btn_voice.visibility = View.VISIBLE
             } else {
+                chat_btn_voice.visibility = View.GONE
                 chat_btn_send_message.visibility = View.VISIBLE
                 chat_btn_attach.visibility = View.GONE
             }
         })
         chat_btn_attach.setOnClickListener { attachFile() }
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            chat_btn_voice.setOnTouchListener { v, event ->
+                if (checkPermission(RECORD_AUDIO)) {
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        chat_input_message.setText("Record")
+                        chat_btn_voice.setColorFilter(ContextCompat.getColor(APP_ACTIVITY,R.color.material_drawer_selected_text))
+                    } else if (event.action == MotionEvent.ACTION_UP) {
+
+                        chat_input_message.setText("")
+                        chat_btn_voice.setColorFilter(null)
+                    }
+                }
+
+                true
+            }
+        }
     }
 
     private fun attachFile() {
@@ -167,13 +200,14 @@ class SingleChatFragment(private val contact: CommonModel) :
                 .child(FOLDER_MESSAGES_IMAGES)
                 .child(messageKey)
 
+
             putImageToStorage(uri, path) {
                 getUrlFromStorage(path) {
-                    sendMessageAsImage(contact.id, it, messageKey)
+//                    contact.imageUrl = path.toString()
+                    sendMessageAsImage(contact.id, imageUrl = it, messageKey = messageKey)
                     mSmoothScrollToPosttion = true
                 }
             }
-
         }
     }
 

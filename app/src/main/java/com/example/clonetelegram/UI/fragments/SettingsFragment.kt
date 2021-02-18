@@ -17,7 +17,10 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 
 class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
-
+    override fun onStart() {
+        super.onStart()
+        APP_ACTIVITY.mAppDrawer.updateHeader()
+    }
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(true)
