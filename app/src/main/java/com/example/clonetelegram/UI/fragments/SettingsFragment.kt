@@ -3,6 +3,7 @@ package com.example.clonetelegram.UI.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -21,6 +22,12 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         super.onStart()
         APP_ACTIVITY.mAppDrawer.updateHeader()
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        APP_ACTIVITY.mAppDrawer.updateHeader()
+    }
+
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(true)

@@ -3,6 +3,7 @@ package com.example.clonetelegram.UI.fragments.SingleChat
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AbsListView
@@ -37,6 +38,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private lateinit var mAdapter: SingleChatAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mMessagesListener: AppChildEventListener
+    private lateinit var mAppVoiceRecorder: AppVoiceRecorder
     private var mCountMessages = 10
     private var mIsScroling = false
     private var mSmoothScrollToPosttion = true
@@ -59,8 +61,9 @@ class SingleChatFragment(private val contact: CommonModel) :
 //        contact.imageUrl = path.toString()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     private fun initFields() {
+        mAppVoiceRecorder = AppVoiceRecorder()
         mSwipeRefreshLayout = chat_swipe_refresh
         mLayoutManager = LinearLayoutManager(this.context)
         chat_input_message.addTextChangedListener(AppTextWatcher {
@@ -83,11 +86,22 @@ class SingleChatFragment(private val contact: CommonModel) :
                 if (checkPermission(RECORD_AUDIO)) {
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         chat_input_message.setText("Record")
-                        chat_btn_voice.setColorFilter(ContextCompat.getColor(APP_ACTIVITY,R.color.material_drawer_selected_text))
+                        chat_btn_voice.setColorFilter(
+                            ContextCompat.getColor(
+                                APP_ACTIVITY,
+                                R.color.material_drawer_selected_text
+                            )
+                        )
+                        val messageKey = getMessageKey(contact.id)
+                        mAppVoiceRecorder.startRecord(messageKey)
                     } else if (event.action == MotionEvent.ACTION_UP) {
 
                         chat_input_message.setText("")
                         chat_btn_voice.setColorFilter(null)
+                        mAppVoiceRecorder.stopRecord { file, messagekey ->
+
+                            uploadFileTOStorage(Uri.fromFile(file), messagekey)
+                        }
                     }
                 }
 
@@ -194,8 +208,7 @@ class SingleChatFragment(private val contact: CommonModel) :
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val uri = CropImage.getActivityResult(data).uri
-            val messageKey = REF_DATABASE_ROOT.child(NODE_MESSAGES)
-                .child(CURRNET_UID).child(contact.id).push().key.toString()
+            val messageKey = getMessageKey(contact.id)
             val path = REF_STORAGE_ROOT
                 .child(FOLDER_MESSAGES_IMAGES)
                 .child(messageKey)
@@ -210,6 +223,7 @@ class SingleChatFragment(private val contact: CommonModel) :
             }
         }
     }
+
 
     private fun initInfoToolbar() {
         if (mReceivingUser.fullname.isEmpty()) {
@@ -229,4 +243,10 @@ class SingleChatFragment(private val contact: CommonModel) :
 //            mRefMessages.removeEventListener(it)
 //        }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mAppVoiceRecorder.releaseRecorder()
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.clonetelegram.database
 
 import android.net.Uri
+import android.widget.Toast
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
 import com.example.clonetelegram.utils.*
@@ -40,7 +41,7 @@ const val CHILD_FULL_NAME = "fullname"
 const val CHILD_BIO = "bio"
 const val CHILD_PHOTO_URL = "photoURL"
 const val CHILD_STATE = "state"
-const val CHILD_IMAGE_ULR = "imageURL"
+const val CHILD_FILE_ULR = "fileURL"
 
 fun initFirebase() {
     AUTH = FirebaseAuth.getInstance()
@@ -153,6 +154,7 @@ fun sendMessage(message: String, receivingUserID: String, typeText: String, func
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
 fun sendMessageAsImage(receivingUserID: String, imageUrl: String, messageKey: String) {
     val refDialogUser = "$NODE_MESSAGES/$CURRNET_UID/$receivingUserID"
     val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserID/$CURRNET_UID"
@@ -162,7 +164,7 @@ fun sendMessageAsImage(receivingUserID: String, imageUrl: String, messageKey: St
     mapMessage[CHILD_TYPE] = TYPE_MESSAGE_IMAGE
     mapMessage[CHILD_ID] = messageKey
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
-    mapMessage[CHILD_IMAGE_ULR] = imageUrl
+    mapMessage[CHILD_FILE_ULR] = imageUrl
 
     val mapDialog = hashMapOf<String, Any>()
     mapDialog["$refDialogUser/$messageKey"] = mapMessage
@@ -171,6 +173,7 @@ fun sendMessageAsImage(receivingUserID: String, imageUrl: String, messageKey: St
     REF_DATABASE_ROOT.updateChildren(mapDialog)
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
 fun updateCurrentUserName(newUserName: String) {
     REF_DATABASE_ROOT.child(
         NODE_USERS
@@ -224,4 +227,11 @@ fun setNameToDatabase(fullname: String) {
             APP_ACTIVITY.mAppDrawer.updateHeader()
             APP_ACTIVITY.supportFragmentManager.popBackStack()
         }.addOnFailureListener { showToast(it.message.toString()) }
+}
+
+fun getMessageKey(id: String) = REF_DATABASE_ROOT.child(NODE_MESSAGES)
+    .child(CURRNET_UID).child(id).push().key.toString()
+
+fun uploadFileTOStorage(uri: Uri, messagekey: String) {
+    showToast("Record OK")
 }
