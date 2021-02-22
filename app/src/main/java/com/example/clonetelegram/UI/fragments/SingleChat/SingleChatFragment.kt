@@ -18,6 +18,7 @@ import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
 import com.example.clonetelegram.utils.*
 import com.google.firebase.database.DatabaseReference
+import com.mikepenz.materialdrawer.util.ifNotNull
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
@@ -100,7 +101,9 @@ class SingleChatFragment(private val contact: CommonModel) :
                         chat_btn_voice.setColorFilter(null)
                         mAppVoiceRecorder.stopRecord { file, messagekey ->
 
-                            uploadFileTOStorage(Uri.fromFile(file), messagekey)
+                            uploadFileTOStorage(Uri.fromFile(file), messagekey,contact.id,
+                                TYPE_MESSAGE_VOICE)
+                            mSmoothScrollToPosttion = true
                         }
                     }
                 }
@@ -209,18 +212,12 @@ class SingleChatFragment(private val contact: CommonModel) :
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             val uri = CropImage.getActivityResult(data).uri
             val messageKey = getMessageKey(contact.id)
-            val path = REF_STORAGE_ROOT
-                .child(FOLDER_MESSAGES_IMAGES)
-                .child(messageKey)
+            uploadFileTOStorage(
+                uri = uri, messageKey = messageKey, receivedID = contact.id,
+                typeMessage = TYPE_MESSAGE_IMAGE
+            )
+            mSmoothScrollToPosttion = true
 
-
-            putImageToStorage(uri, path) {
-                getUrlFromStorage(path) {
-//                    contact.imageUrl = path.toString()
-                    sendMessageAsImage(contact.id, imageUrl = it, messageKey = messageKey)
-                    mSmoothScrollToPosttion = true
-                }
-            }
         }
     }
 

@@ -38,7 +38,7 @@ class AppVoiceRecorder {
         mFile.createNewFile()
     }
 
-    fun stopRecord(onSuccess: (file: File, messageKe: String) -> Unit) {
+    fun stopRecord(onSuccess: (file: File, messageKey: String) -> Unit) {
         try {
             mMediaRecorder.stop()
             onSuccess(mFile, mMessageKey)
