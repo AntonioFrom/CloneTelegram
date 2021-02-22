@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:gravity="end"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/chat_received_image"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="21:45" />
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:gravity="end"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/chat_user_image"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="21:45" />
