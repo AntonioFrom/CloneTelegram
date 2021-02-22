@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clonetelegram.R
 import com.example.clonetelegram.UI.fragments.BaseFragment
+import com.example.clonetelegram.UI.fragments.message_recycler_view.view.AppViewFactory
 import com.example.clonetelegram.database.*
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
@@ -135,11 +136,11 @@ class SingleChatFragment(private val contact: CommonModel) :
         mMessagesListener = AppChildEventListener {
             val message = it.getCommonModel()
             if (mSmoothScrollToPosttion) {
-                mAdapter.addItemToBottom(message) {
+                mAdapter.addItemToBottom(AppViewFactory.getView(message)) {
                     mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
                 }
             } else {
-                mAdapter.addItemToTop(message) {
+                mAdapter.addItemToTop(AppViewFactory.getView(message)) {
                     mSwipeRefreshLayout.isRefreshing = false
                 }
             }
