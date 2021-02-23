@@ -1,4 +1,4 @@
-package com.example.clonetelegram.UI.fragments.register
+package com.example.clonetelegram.UI.screens.register
 
 import androidx.fragment.app.Fragment
 import com.example.clonetelegram.R

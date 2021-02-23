@@ -1,8 +1,7 @@
-package com.example.clonetelegram.UI.fragments
+package com.example.clonetelegram.UI.screens
 
 import com.example.clonetelegram.R
 import com.example.clonetelegram.database.*
-import com.example.clonetelegram.utils.*
 import kotlinx.android.synthetic.main.fragment_change_bio.*
 
 

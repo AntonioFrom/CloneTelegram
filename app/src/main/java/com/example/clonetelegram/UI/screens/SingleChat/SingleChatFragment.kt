@@ -1,6 +1,5 @@
-package com.example.clonetelegram.UI.fragments.SingleChat
+package com.example.clonetelegram.UI.screens.SingleChat
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -12,14 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clonetelegram.R
-import com.example.clonetelegram.UI.fragments.BaseFragment
-import com.example.clonetelegram.UI.fragments.message_recycler_view.view.AppViewFactory
+import com.example.clonetelegram.UI.screens.BaseFragment
+import com.example.clonetelegram.UI.message_recycler_view.view.AppViewFactory
 import com.example.clonetelegram.database.*
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
 import com.example.clonetelegram.utils.*
 import com.google.firebase.database.DatabaseReference
-import com.mikepenz.materialdrawer.util.ifNotNull
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
@@ -245,6 +243,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     override fun onDestroy() {
         super.onDestroy()
         mAppVoiceRecorder.releaseRecorder()
+        mAdapter.onDestroy()
     }
 
 }

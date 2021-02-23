@@ -1,4 +1,4 @@
-package com.example.clonetelegram.UI.fragments
+package com.example.clonetelegram.UI.screens
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.clonetelegram.R
-import com.example.clonetelegram.UI.fragments.SingleChat.SingleChatFragment
+import com.example.clonetelegram.UI.screens.SingleChat.SingleChatFragment
 import com.example.clonetelegram.database.*
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.utils.*

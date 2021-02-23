@@ -1,11 +1,8 @@
-package com.example.clonetelegram.UI.fragments
+package com.example.clonetelegram.UI.screens
 
-import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.drawerlayout.widget.DrawerLayout
 import com.example.clonetelegram.R
-import com.example.clonetelegram.activity.MainActivity
 import com.example.clonetelegram.utils.APP_ACTIVITY
 import com.example.clonetelegram.utils.hideKeyboard
 

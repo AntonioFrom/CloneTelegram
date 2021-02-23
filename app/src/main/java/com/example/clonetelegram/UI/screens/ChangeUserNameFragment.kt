@@ -1,4 +1,4 @@
-package com.example.clonetelegram.UI.fragments
+package com.example.clonetelegram.UI.screens
 
 import com.example.clonetelegram.R
 import com.example.clonetelegram.database.*

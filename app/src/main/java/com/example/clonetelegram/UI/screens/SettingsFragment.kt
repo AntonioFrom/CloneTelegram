@@ -1,4 +1,4 @@
-package com.example.clonetelegram.UI.fragments
+package com.example.clonetelegram.UI.screens
 
 
 import android.app.Activity.RESULT_OK

@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.File
 import java.util.ArrayList
 
 fun initFirebase() {
@@ -128,7 +129,12 @@ fun sendMessage(message: String, receivingUserID: String, typeText: String, func
         .addOnFailureListener { showToast(it.message.toString()) }
 }
 
-fun sendMessageAsFile(receivingUserID: String, fileUrl: String, messageKey: String, typeMessage:String) {
+fun sendMessageAsFile(
+    receivingUserID: String,
+    fileUrl: String,
+    messageKey: String,
+    typeMessage: String
+) {
     val refDialogUser = "$NODE_MESSAGES/$CURRNET_UID/$receivingUserID"
     val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserID/$CURRNET_UID"
 
@@ -221,5 +227,11 @@ fun uploadFileTOStorage(uri: Uri, messageKey: String, receivedID: String, typeMe
             )
         }
     }
-    showToast("Record OK")
+}
+
+fun getFileFromStorage(mFile: File, fileUrl: String, function: () -> Unit) {
+    val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
+    path.getFile(mFile)
+        .addOnSuccessListener { function() }
+        .addOnFailureListener { showToast(it.message.toString()) }
 }

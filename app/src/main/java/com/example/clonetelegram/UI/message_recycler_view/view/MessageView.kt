@@ -1,4 +1,4 @@
-package com.example.clonetelegram.UI.fragments.message_recycler_view.view
+package com.example.clonetelegram.UI.message_recycler_view.view
 
 interface MessageView {
 
