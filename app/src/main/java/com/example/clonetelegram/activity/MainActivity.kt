@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun initFunc() {
         setSupportActionBar(mToolbar)
         if (AUTH.currentUser != null) {

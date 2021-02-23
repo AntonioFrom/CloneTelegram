@@ -1,5 +1,6 @@
 package com.example.clonetelegram.UI.screens.SingleChat
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -17,9 +18,11 @@ import com.example.clonetelegram.database.*
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
 import com.example.clonetelegram.utils.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DatabaseReference
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.choice_upload.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
 import kotlinx.android.synthetic.main.toolbar_info.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +45,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var mCountMessages = 10
     private var mIsScroling = false
     private var mSmoothScrollToPosttion = true
+    private lateinit var mBottomSheetBehavior: BottomSheetBehavior<*>
 
     //  private var mListListeners = mutableListOf<AppChildEventListener>()
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
@@ -62,10 +66,13 @@ class SingleChatFragment(private val contact: CommonModel) :
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
         mAppVoiceRecorder = AppVoiceRecorder()
         mSwipeRefreshLayout = chat_swipe_refresh
         mLayoutManager = LinearLayoutManager(this.context)
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_choice)
+        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         chat_input_message.addTextChangedListener(AppTextWatcher {
             val string = chat_input_message.text.toString()
             if (string.isEmpty() || string == "Record") {
@@ -78,7 +85,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                 chat_btn_attach.visibility = View.GONE
             }
         })
-        chat_btn_attach.setOnClickListener { attachFile() }
+        chat_btn_attach.setOnClickListener { attach() }
 
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -100,8 +107,10 @@ class SingleChatFragment(private val contact: CommonModel) :
                         chat_btn_voice.setColorFilter(null)
                         mAppVoiceRecorder.stopRecord { file, messagekey ->
 
-                            uploadFileTOStorage(Uri.fromFile(file), messagekey,contact.id,
-                                TYPE_MESSAGE_VOICE)
+                            uploadFileTOStorage(
+                                Uri.fromFile(file), messagekey, contact.id,
+                                TYPE_MESSAGE_VOICE
+                            )
                             mSmoothScrollToPosttion = true
                         }
                     }
@@ -112,7 +121,19 @@ class SingleChatFragment(private val contact: CommonModel) :
         }
     }
 
+    private fun attach() {
+        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        btn_attach_file.setOnClickListener { attachFile() }
+        btn_attach_image.setOnClickListener { attachImage() }
+    }
+
     private fun attachFile() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+        startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
+    }
+
+    private fun attachImage() {
         CropImage.activity()
             .setAspectRatio(1, 1)
             .setRequestedSize(250, 250)
@@ -208,15 +229,21 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            val uri = CropImage.getActivityResult(data).uri
-            val messageKey = getMessageKey(contact.id)
-            uploadFileTOStorage(
-                uri = uri, messageKey = messageKey, receivedID = contact.id,
-                typeMessage = TYPE_MESSAGE_IMAGE
-            )
-            mSmoothScrollToPosttion = true
-
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            when(requestCode){
+                CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                    val uri = CropImage.getActivityResult(data).uri
+                    val messageKey = getMessageKey(contact.id)
+                    uploadFileTOStorage(uri, messageKey, contact.id, TYPE_MESSAGE_IMAGE)
+                    mSmoothScrollToPosttion = true
+                }
+                PICK_FILE_REQUEST_CODE -> {
+                    val uri = data.data
+                    val messageKey = getMessageKey(contact.id)
+                    uri?.let { uploadFileTOStorage(it, messageKey, contact.id, TYPE_MESSAGE_FILE) }
+                    mSmoothScrollToPosttion = true
+                }
+            }
         }
     }
 
