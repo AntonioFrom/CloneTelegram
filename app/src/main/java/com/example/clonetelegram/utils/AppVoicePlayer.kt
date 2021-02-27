@@ -1,7 +1,9 @@
 package com.example.clonetelegram.utils
 
 import android.media.MediaPlayer
+import android.util.Log
 import com.example.clonetelegram.database.getFileFromStorage
+
 import java.io.File
 
 class AppVoicePlayer {
@@ -16,6 +18,7 @@ class AppVoicePlayer {
             }
         } else {
             mFile.createNewFile()
+  //          Log.e("TAG", mFile.toString() + fileUrl.toString())
             getFileFromStorage(mFile, fileUrl) {
                 startPlay {
                     function()
@@ -55,7 +58,7 @@ class AppVoicePlayer {
         mMediaPlayer.release()
     }
 
-    fun init(){
+    fun init() {
         mMediaPlayer = MediaPlayer()
     }
 }

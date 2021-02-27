@@ -1,6 +1,7 @@
 package com.example.clonetelegram.database
 
 import android.net.Uri
+import android.util.Log
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
 import com.example.clonetelegram.utils.APP_ACTIVITY
@@ -40,11 +41,28 @@ inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url:
         .addOnSuccessListener { function(it.toString()) }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+fun getFileFromStorage(mFile: File, fileUrl: String, function: () -> Unit) {
+    val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
+//    Log.e("TAG",mFile.toString() + fileUrl.toString())
+    path.getFile(mFile)
+        .addOnSuccessListener { function() }
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
 
 inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
     path.putFile(uri)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
+}
+fun uploadFileTOStorage(uri: Uri, messageKey: String, receivedID: String, typeMessage: String, filename: String = "") {
+    val path = REF_STORAGE_ROOT.child(
+        FOLDER_FILES
+    ).child(messageKey)
+    putFileToStorage(uri, path) {
+        getUrlFromStorage(path) {
+            sendMessageAsFile(receivedID, fileUrl = it, messageKey = messageKey, typeMessage = typeMessage, filename = filename)
+        }
+    }
 }
 
 inline fun initUser(crossinline function: () -> Unit) {
@@ -133,19 +151,20 @@ fun sendMessageAsFile(
     receivingUserID: String,
     fileUrl: String,
     messageKey: String,
-    typeMessage: String
+    typeMessage: String,
+    filename: String
 ) {
     val refDialogUser = "$NODE_MESSAGES/$CURRNET_UID/$receivingUserID"
     val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserID/$CURRNET_UID"
 
     val mapMessage = hashMapOf<String, Any>()
-    mapMessage[CHILD_FROM] =
-        CURRNET_UID
+    mapMessage[CHILD_FROM] = CURRNET_UID
     mapMessage[CHILD_TYPE] = typeMessage
     mapMessage[CHILD_ID] = messageKey
-    mapMessage[CHILD_TIMESTAMP] =
-        ServerValue.TIMESTAMP
+    mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
     mapMessage[CHILD_FILE_ULR] = fileUrl
+    mapMessage[CHILD_TEXT] = filename
+
 
     val mapDialog = hashMapOf<String, Any>()
     mapDialog["$refDialogUser/$messageKey"] = mapMessage
@@ -215,23 +234,5 @@ fun getMessageKey(id: String) = REF_DATABASE_ROOT.child(
 )
     .child(CURRNET_UID).child(id).push().key.toString()
 
-fun uploadFileTOStorage(uri: Uri, messageKey: String, receivedID: String, typeMessage: String) {
-    val path = REF_STORAGE_ROOT.child(
-        FOLDER_FILES
-    ).child(messageKey)
-    putFileToStorage(uri, path) {
-        getUrlFromStorage(path) {
-            sendMessageAsFile(
-                receivedID, fileUrl = it, messageKey = messageKey,
-                typeMessage = typeMessage
-            )
-        }
-    }
-}
 
-fun getFileFromStorage(mFile: File, fileUrl: String, function: () -> Unit) {
-    val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
-    path.getFile(mFile)
-        .addOnSuccessListener { function() }
-        .addOnFailureListener { showToast(it.message.toString()) }
-}
+

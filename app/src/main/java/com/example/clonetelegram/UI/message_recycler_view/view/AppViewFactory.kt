@@ -1,6 +1,7 @@
 package com.example.clonetelegram.UI.message_recycler_view.view
 
 import com.example.clonetelegram.models.CommonModel
+import com.example.clonetelegram.utils.TYPE_MESSAGE_FILE
 import com.example.clonetelegram.utils.TYPE_MESSAGE_IMAGE
 import com.example.clonetelegram.utils.TYPE_MESSAGE_VOICE
 
@@ -19,6 +20,13 @@ class AppViewFactory {
                     message.from,
                     message.timeStamp.toString(),
                     message.fileUrl
+                )
+                TYPE_MESSAGE_FILE -> ViewFileMessage(
+                    message.id,
+                    message.from,
+                    message.timeStamp.toString(),
+                    message.fileUrl,
+                    message.textMessage
                 )
                 else -> ViewTextMessage(
                     message.id,

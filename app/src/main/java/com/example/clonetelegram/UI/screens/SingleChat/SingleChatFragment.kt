@@ -107,10 +107,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                         chat_btn_voice.setColorFilter(null)
                         mAppVoiceRecorder.stopRecord { file, messagekey ->
 
-                            uploadFileTOStorage(
-                                Uri.fromFile(file), messagekey, contact.id,
-                                TYPE_MESSAGE_VOICE
-                            )
+                            uploadFileTOStorage(Uri.fromFile(file), messagekey, contact.id, TYPE_MESSAGE_VOICE)
                             mSmoothScrollToPosttion = true
                         }
                     }
@@ -229,7 +226,7 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && data != null) {
+        if ( data != null) {
             when(requestCode){
                 CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                     val uri = CropImage.getActivityResult(data).uri
@@ -240,7 +237,8 @@ class SingleChatFragment(private val contact: CommonModel) :
                 PICK_FILE_REQUEST_CODE -> {
                     val uri = data.data
                     val messageKey = getMessageKey(contact.id)
-                    uri?.let { uploadFileTOStorage(it, messageKey, contact.id, TYPE_MESSAGE_FILE) }
+                    val filename = getfileNameFromUri(uri)
+                    uri?.let { uploadFileTOStorage(it, messageKey, contact.id, TYPE_MESSAGE_FILE,filename) }
                     mSmoothScrollToPosttion = true
                 }
             }
