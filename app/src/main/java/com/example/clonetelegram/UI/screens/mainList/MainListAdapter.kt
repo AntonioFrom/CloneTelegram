@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.clonetelegram.R
-import com.example.clonetelegram.UI.screens.SingleChat.SingleChatFragment
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.utils.downloadAndSetImage
-import com.example.clonetelegram.utils.replaceFragment
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.main_list_item.view.*
 
@@ -28,11 +26,7 @@ class MainListAdapter : RecyclerView.Adapter<MainListAdapter.MainListHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainListHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.main_list_item, parent, false)
-        val holder = MainListHolder(view)
-        holder.itemView.setOnClickListener {
-            replaceFragment(SingleChatFragment(listItems[holder.adapterPosition]))
-        }
-        return holder
+        return MainListHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -44,8 +38,7 @@ class MainListAdapter : RecyclerView.Adapter<MainListAdapter.MainListHolder>() {
         holder.itemLastMessage.text = listItems[position].lastMessage
         holder.itemPhoto.downloadAndSetImage(listItems[position].photoURL)
     }
-
-    fun updateListItems(item: CommonModel) {
+    fun updateListItems (item:CommonModel){
         listItems.add(item)
         notifyItemInserted(listItems.size)
     }

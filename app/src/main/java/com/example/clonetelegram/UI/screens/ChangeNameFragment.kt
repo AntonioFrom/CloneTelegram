@@ -1,8 +1,7 @@
-package com.example.clonetelegram.UI.screens.settings
+package com.example.clonetelegram.UI.screens
 
 import android.util.Log
 import com.example.clonetelegram.R
-import com.example.clonetelegram.UI.screens.BaseChangeFragment
 import com.example.clonetelegram.database.*
 import com.example.clonetelegram.utils.*
 import kotlinx.android.synthetic.main.fragment_change_name.*

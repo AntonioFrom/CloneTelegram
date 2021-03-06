@@ -4,7 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.view.*
+import android.view.MotionEvent
+import android.view.View
 import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clonetelegram.R
 import com.example.clonetelegram.UI.screens.BaseFragment
 import com.example.clonetelegram.UI.message_recycler_view.view.AppViewFactory
-import com.example.clonetelegram.UI.screens.settings.ChangeNameFragment
 import com.example.clonetelegram.database.*
 import com.example.clonetelegram.models.CommonModel
 import com.example.clonetelegram.models.UserModel
@@ -186,7 +186,6 @@ class SingleChatFragment(private val contact: CommonModel) :
     }
 
     private fun initToolbar() {
-        setHasOptionsMenu(true)
         mToolbarInfo = APP_ACTIVITY.mToolbar.toolbar_info
         mToolbarInfo.visibility = View.VISIBLE
         mListenerInfoToolbar = AppValueEventListener {
@@ -256,14 +255,5 @@ class SingleChatFragment(private val contact: CommonModel) :
         mAppVoiceRecorder.releaseRecorder()
         mAdapter.onDestroy()
     }
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        activity?.menuInflater?.inflate(R.menu.single_chat_action_menu, menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-        }
-        return true
-
-    }
 }
