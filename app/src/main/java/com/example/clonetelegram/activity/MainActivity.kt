@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.clonetelegram.UI.screens.MainFragment
+import com.example.clonetelegram.UI.screens.mainList.MainListFragment
 import com.example.clonetelegram.UI.screens.register.EnterPhoneNumberFragment
 import com.example.clonetelegram.UI.objects.AppDrawer
 import com.example.clonetelegram.database.AUTH
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(mToolbar)
         if (AUTH.currentUser != null) {
             mAppDrawer.create()
-            replaceFragment(MainFragment(), false)
+            replaceFragment(MainListFragment(), false)
         } else {
            replaceFragment(EnterPhoneNumberFragment(),false)
         }

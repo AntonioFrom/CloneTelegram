@@ -144,7 +144,7 @@ class SingleChatFragment(private val contact: CommonModel) :
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.isNestedScrollingEnabled = false
         mMessagesListener = AppChildEventListener {
-            val message = it.getCommonModel()
+            var message = it.getCommonModel()
             if (mSmoothScrollToPosttion) {
                 mAdapter.addItemToBottom(AppViewFactory.getView(message)) {
                     mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
