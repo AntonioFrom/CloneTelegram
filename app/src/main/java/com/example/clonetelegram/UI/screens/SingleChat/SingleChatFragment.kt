@@ -47,14 +47,9 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var mSmoothScrollToPosttion = true
     private lateinit var mBottomSheetBehavior: BottomSheetBehavior<*>
 
-    //  private var mListListeners = mutableListOf<AppChildEventListener>()
+
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var mLayoutManager: LinearLayoutManager
-//    private var messageKey = REF_DATABASE_ROOT.child(NODE_MESSAGES)
-//        .child(CURRNET_UID).child(contact.id).push().key.toString()
-//    private var path = REF_STORAGE_ROOT
-//        .child(FOLDER_MESSAGES_IMAGES)
-//        .child(messageKey)
 
 
     override fun onResume() {
@@ -62,7 +57,6 @@ class SingleChatFragment(private val contact: CommonModel) :
         initFields()
         initToolbar()
         initRecyclerView()
-//        contact.imageUrl = path.toString()
     }
 
 
@@ -161,12 +155,6 @@ class SingleChatFragment(private val contact: CommonModel) :
                 }
             }
 
-//            mAdapter.addItem(it.getCommonModel(), mSmoothScrollToPosttion){
-//                if (mSmoothScrollToPosttion) {
-//                    mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
-//                }
-//                mSwipeRefreshLayout.isRefreshing = false
-//            }
         }
 
         mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
@@ -195,7 +183,6 @@ class SingleChatFragment(private val contact: CommonModel) :
         mCountMessages += 10
         mRefMessages.removeEventListener(mMessagesListener)
         mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
-        //      mListListeners.add(mMessagesListener)
     }
 
     private fun initToolbar() {
@@ -219,6 +206,7 @@ class SingleChatFragment(private val contact: CommonModel) :
                 contact.id,
                 TYPE_TEXT
             ) {
+                saveToMainList(contact.id, TYPE_CHAT)
                 chat_input_message.setText("")
             }
         }
@@ -260,9 +248,6 @@ class SingleChatFragment(private val contact: CommonModel) :
         mToolbarInfo.visibility = View.GONE
         mRefUser.removeEventListener(mListenerInfoToolbar)
         mRefMessages.removeEventListener(mMessagesListener)
-//        mListListeners.forEach {
-//            mRefMessages.removeEventListener(it)
-//        }
     }
 
     override fun onDestroy() {

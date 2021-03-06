@@ -30,3 +30,5 @@ const val CHILD_BIO = "bio"
 const val CHILD_PHOTO_URL = "photoURL"
 const val CHILD_STATE = "state"
 const val CHILD_FILE_ULR = "fileURL"
+
+const val NODE_MAIN_LIST = "main_list"

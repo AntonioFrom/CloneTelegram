@@ -41,6 +41,7 @@ inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url:
         .addOnSuccessListener { function(it.toString()) }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
 fun getFileFromStorage(mFile: File, fileUrl: String, function: () -> Unit) {
     val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
 //    Log.e("TAG",mFile.toString() + fileUrl.toString())
@@ -54,13 +55,20 @@ inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline functi
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 }
+
 fun uploadFileTOStorage(uri: Uri, messageKey: String, receivedID: String, typeMessage: String, filename: String = "") {
     val path = REF_STORAGE_ROOT.child(
         FOLDER_FILES
     ).child(messageKey)
     putFileToStorage(uri, path) {
         getUrlFromStorage(path) {
-            sendMessageAsFile(receivedID, fileUrl = it, messageKey = messageKey, typeMessage = typeMessage, filename = filename)
+            sendMessageAsFile(
+                receivedID,
+                fileUrl = it,
+                messageKey = messageKey,
+                typeMessage = typeMessage,
+                filename = filename
+            )
         }
     }
 }
@@ -77,6 +85,27 @@ inline fun initUser(crossinline function: () -> Unit) {
             }
             function()
         })
+}
+
+fun saveToMainList(id: String, typeChat: String) {
+        var refUser = "$NODE_MAIN_LIST/$CURRNET_UID/$id"
+        var refReceived = "$NODE_MAIN_LIST/$id/$CURRNET_UID"
+
+        val mapUser = hashMapOf<String,Any>()
+        val mapReceived = hashMapOf<String,Any>()
+
+    mapUser[CHILD_ID] = id
+    mapUser[CHILD_TYPE] = typeChat
+    
+    mapReceived[CHILD_ID] = CURRNET_UID
+    mapReceived[CHILD_TYPE] = typeChat
+
+    val commonMap = hashMapOf<String, Any>()
+    commonMap[refUser] = mapUser
+    commonMap[refReceived] = mapReceived
+
+    REF_DATABASE_ROOT.updateChildren(commonMap)
+        .addOnFailureListener{ showToast(it.message.toString())}
 }
 
 fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
