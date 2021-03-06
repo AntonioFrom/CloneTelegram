@@ -1,4 +1,4 @@
-package com.example.clonetelegram.UI.screens
+package com.example.clonetelegram.UI.screens.settings
 
 
 import android.app.Activity.RESULT_OK
@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 
 import com.example.clonetelegram.R
+import com.example.clonetelegram.UI.screens.BaseFragment
 import com.example.clonetelegram.database.*
 import com.example.clonetelegram.utils.*
 import com.theartofdev.edmodo.cropper.CropImage
